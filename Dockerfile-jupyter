@@ -1,0 +1,22 @@
+FROM ubuntu:16.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    && apt-get install -y apt-utils \
+    python3 python3-pip python3-dev
+
+RUN pip3 install -U pip \
+    && pip3 install -U ipython jupyter
+
+COPY jupyter_notebook_config.py /root/.jupyter/
+
+# Fix 'No module named ipykernel_launcher' https://github.com/nteract/hydrogen/issues/730
+RUN python3 -m ipykernel install --user
+
+#RUN jupyter kernelspec list --json
+
+# IPython
+EXPOSE 8888
+
+WORKDIR "/notebooks"
+CMD ["jupyter", "notebook", "--allow-root"]
