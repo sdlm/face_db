@@ -1,0 +1,78 @@
+#%RAML 1.0
+---
+title: e-BookMobile API
+baseUri: http://micro-service.com/{version}
+version: v1
+/profiles:
+  get:
+    description: Retrieve batch of profiles
+  post:
+    description: Create new profile
+    body:
+      application/json:
+        type: |
+          {
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "id": "http://jsonschema.net",
+            "required": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "required": true,
+                "maxLength": 64
+              },
+              "surname": {
+                "type": "string",
+                "required": true,
+                "maxLength": 64
+              },
+              "patronymic": {
+                "type": "string",
+                "required": false,
+                "maxLength": 64
+              },
+              "born": {
+                "type": "date-only",
+                "required": false
+              }
+            }
+          }
+        example: |
+          {
+            "name": Donald,
+            "patronymic": John,
+            "surname": Trump,
+            "born": 1946-06-14,
+          }
+  /{id}:
+    get:
+      description: Retrieve profile by id
+    patch:
+      description: Modify existed profile
+    /add_photo:
+      post:
+        description: Add photo to profile
+        body:
+          application/json:
+            example:
+              {
+                "file": "..."
+              }
+    /rm_photo:
+      post:
+        description: Remove one photo from profile
+        body:
+          application/json:
+            example:
+              {
+                "uuid": "..."
+              }
+  /search:
+    get:
+      description: Find profile by photo
+      queryParameters:
+        img:
+          type: file
+          description: photo of searched person
+          required: true
